@@ -1,0 +1,147 @@
+ <html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Upload Course</title>
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background-color: #f0f2f5;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      margin-top: 15px;
+      font-weight: 500;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    input[type="file"] {
+      padding: 8px;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 12px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .success {
+      color: green;
+      font-weight: 500;
+    }
+
+    .error {
+      color: red;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Upload New Course</h2>
+    <form id="courseForm">
+      <label>Title:</label>
+      <input type="text" name="title" required>
+
+      <label>Description:</label>
+      <textarea name="description" required></textarea>
+
+      <label>Price (in ₹):</label>
+      <input type="number" name="price" required>
+
+      <label>Instructor ID:</label>
+      <input type="text" name="instructorId" required>
+
+      <label>Video File:</label>
+      <input type="file" name="video" accept="video/*" required>
+
+      <label>Quiz (Optional - JSON format):</label>
+      <textarea name="quizzes" placeholder='[{"question":"Q1","options":["A","B","C"],"answer":"A"}]'></textarea>
+
+      <button type="submit">Upload Course</button>
+    </form>
+
+    <p id="message" class=""></p>
+  </div>
+
+  <script>
+    const form = document.getElementById("courseForm");
+    const message = document.getElementById("message");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+
+      const quizzesText = formData.get("quizzes");
+      if (quizzesText) {
+        try {
+          const parsed = JSON.parse(quizzesText);
+          formData.set("quizzes", JSON.stringify(parsed));
+        } catch (err) {
+          message.textContent = "Invalid quiz JSON format!";
+          message.className = "error";
+          return;
+        }
+      }
+
+      try {
+        const response = await fetch("http://localhost:5000/api/courses/create", {
+          method: "POST",
+          body: formData,
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+          message.textContent = "✅ Course uploaded successfully!";
+          message.className = "success";
+          form.reset();
+        } else {
+          message.textContent = result.message || "❌ Upload failed";
+          message.className = "error";
+        }
+      } catch (err) {
+        console.error(err);
+        message.textContent = "❌ Network error";
+        message.className = "error";
+      }
+    });
+  </script>
+</body>
+</html>

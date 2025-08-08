@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Enroll in a Course - Lernora</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #3f51b5;
+      color: #fff;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 2rem auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      padding: 0 1rem;
+    }
+
+    .course-card {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      padding: 1.5rem;
+      text-align: center;
+      transition: transform 0.3s;
+    }
+
+    .course-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .course-card img {
+      max-width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+
+    h3 {
+      margin: 1rem 0 0.5rem;
+    }
+
+    .price {
+      color: #2e7d32;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+
+    .enroll-btn {
+      background: #3f51b5;
+      color: white;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .enroll-btn:hover {
+      background: #303f9f;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Lernora - Enroll in a Course</h1>
+  </header>
+
+  <div class="container">
+    <!-- Replace each data-id value with your actual Course IDs from MongoDB -->
+    <div class="course-card" data-id="688e42342a4281fd00d65001">
+      <img src="https://via.placeholder.com/300x150.png?text=Fullstack+Web" alt="Course 1">
+      <h3>Fullstack Web Development</h3>
+      <p class="price">₹499</p>
+      <button class="enroll-btn">Enroll</button>
+    </div>
+
+    <div class="course-card" data-id="688e42342a4281fd00d65002">
+      <img src="https://via.placeholder.com/300x150.png?text=Python+Basics" alt="Course 2">
+      <h3>Python for Beginners</h3>
+      <p class="price">₹299</p>
+      <button class="enroll-btn">Enroll</button>
+    </div>
+
+    <div class="course-card" data-id="688e42342a4281fd00d65003">
+      <img src="https://via.placeholder.com/300x150.png?text=Machine+Learning" alt="Course 3">
+      <h3>Machine Learning</h3>
+      <p class="price">₹599</p>
+      <button class="enroll-btn">Enroll</button>
+    </div>
+
+    <div class="course-card" data-id="688e42342a4281fd00d65004">
+      <img src="https://via.placeholder.com/300x150.png?text=UI%2FUX+Design" alt="Course 4">
+      <h3>UI/UX Design</h3>
+      <p class="price">₹399</p>
+      <button class="enroll-btn">Enroll</button>
+    </div>
+
+    <div class="course-card" data-id="688e42342a4281fd00d65005">
+      <img src="https://via.placeholder.com/300x150.png?text=Data+Structures" alt="Course 5">
+      <h3>Data Structures in C++</h3>
+      <p class="price">₹449</p>
+      <button class="enroll-btn">Enroll</button>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll(".enroll-btn").forEach(button => {
+      button.addEventListener("click", async () => {
+        const card = button.closest(".course-card");
+        const courseId = card.dataset.id;
+        const userId = localStorage.getItem("userId");
+
+        if (!courseId || !userId) {
+          alert("Missing courseId or userId. Make sure you are logged in.");
+          return;
+        }
+
+        try {
+          const res = await fetch("http://localhost:5000/api/enrollments", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ courseId, userId })
+          });
+
+          const data = await res.json();
+          alert(res.ok ? "✅ Enrolled successfully!" : `❌ ${data.message}`);
+        } catch (err) {
+          console.error("Enrollment Error:", err);
+          alert("❌ Enrollment failed due to network/server issue.");
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Learnora - A Learning Platform</title>
+  <link rel="stylesheet" href="./css/style2.css"/>
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo">🎓 Learnora</div>
+    <nav class="nav-links">
+      <a href="index.html">Login/signup</a>
+      <a href="course.html">Create Course</a>
+      <a href="enrollment.html">Enroll</a>
+      <a href="dashboard.html">My Courses</a>
+      <a href="learning.html">Learning</a>
+      <a href="#" onclick="logout()">Logout</a>
+    </nav>
+  </header>
+
+  <main class="hero">
+    <div class="hero-overlay">
+      <h1>Welcome to Learnora</h1>
+      <p>Your personalized platform to create, enroll, and learn new skills</p>
+      <a href="index.html" class="hero-button">Get Started</a>
+    </div>
+  </main>
+
+  <script>
+    function logout() {
+      localStorage.removeItem("token");
+      alert("Logged out!");
+      window.location.href = "auth.html";
+    }
+  </script>
+</body>
+</html>

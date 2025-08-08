@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Lernora Learning</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; background-color: #f2f2f2; }
+    .video-box { background: #fff; padding: 20px; border-radius: 8px; max-width: 700px; margin: auto; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+    button { margin-top: 15px; background-color: green; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div class="video-box">
+    <h2>Course Title: Intro to Web Dev</h2>
+    <video width="100%" controls>
+      <source src="video/sample.mp4" type="video/mp4">
+      Your browser does not support video.
+    </video>
+    <button onclick="markCompleted()">Mark as Completed</button>
+  </div>
+
+  <script>
+    async function markCompleted() {
+      const userId = "6888c0dcab2b1dee81452aff"; // Replace with real user ID
+      const courseId = "688af273d9f1c75f3a6024c9"; // Replace with real course ID
+
+      const res = await fetch("http://localhost:5000/api/learning/complete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId, courseId })
+      });
+
+      const data = await res.json();
+      alert(data.message);
+    }
+  </script>
+</body>
+</html>
